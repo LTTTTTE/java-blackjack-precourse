@@ -1,21 +1,32 @@
 package domain.user;
 
-import domain.card.Card;
-
-import java.util.ArrayList;
-import java.util.List;
+import domain.card.Deck;
+import view.Output;
 
 /**
  * 게임 딜러를 의미하는 객체
  */
-public class Dealer {
-    private final List<Card> cards = new ArrayList<>();
+public class Dealer extends Player {
+    private static final int DEALER_MIN_STAND_NUMBER = 17;
 
-    public Dealer() {}
-
-    public void addCard(Card card) {
-        cards.add(card);
+    public Dealer() {
+        super("딜러", 0);
     }
 
-    // TODO 추가 기능 구현
+    public boolean isDealerUnderSixteen() {
+        return getScoreWithAceCheck() < DEALER_MIN_STAND_NUMBER;
+    }
+
+    public void dealerMoreCard(Deck deck) {
+        if (isDealerUnderSixteen()) {
+            Output.showDealerMoreCard();
+            addCard(deck.drawCard());
+
+            dealerMoreCard(deck);
+        }
+    }
+
+    public void dealerShowHiddenCard(Deck deck) {
+        addCard(deck.drawCard());
+    }
 }
